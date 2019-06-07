@@ -2,9 +2,9 @@
 
 The CAPTCHA generated is like this:
 
-![1](https://github.com/davidpierre21/sphinx/raw/master/samples/0CVSX_a405.jpg)
-![2](https://github.com/davidpierre21/sphinx/raw/master/samples/0N3OG_a404.jpg)
-![3](https://github.com/davidpierre21/sphinx/raw/master/samples/V7KZC_a406.jpg)
+![1](https://github.com/davidpierre21/sphinx-captcha/raw/master/samples/0CVSX_a405.jpg)
+![2](https://github.com/davidpierre21/sphinx-captcha/raw/master/samples/0N3OG_a404.jpg)
+![3](https://github.com/davidpierre21/sphinx-captcha/raw/master/samples/V7KZC_a406.jpg)
 
 ### How to use
 Change the batch_create_img function parameter on the main section of the code to choose how many captcha images you want to generate. You can run
