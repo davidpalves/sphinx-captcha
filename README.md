@@ -16,8 +16,8 @@ from captcha import Captcha
 
 
 characters_set = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M',
-              'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-              '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+                  'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 characters_per_img = 5
 min_width, min_height = 150, 40
 c = Captcha(min_width, min_height, characters_set, characters_per_img, debug=True)
