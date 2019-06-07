@@ -9,28 +9,29 @@ wd, _ = os.path.split(os.path.abspath(__file__))
 
 
 class Captcha:
-    def __init__(self, width, high, ls=None, lc=4, fs=None,
+    def __init__(self, width, high, characters_set=None, num_of_characters=4,
+                 font_set=None,
                  folder=os.path.join(wd, 'samples'), debug=False):
         """
-        :param ls: letter set, all
-        :param fs: font set
-        :param lc: letter count in one pic
+        :param characters_set: character set, all
+        :param font_set: font set
+        :param num_of_characters: character count in one pic
         :param folder: the folder to save img
         :param debug: debug mode
         """
-        if fs is None:
-            fs = ['FONT_HERSHEY_COMPLEX', 'FONT_HERSHEY_SIMPLEX',
-                  'FONT_ITALIC']
-        self.fs = fs
+        if font_set is None:
+            font_set = ['FONT_HERSHEY_COMPLEX', 'FONT_HERSHEY_SIMPLEX',
+                        'FONT_ITALIC']
+        self.font_set = font_set
 
-        if ls is None:
-            ls = string.ascii_uppercase + string.digits
-        if isinstance(ls, str):
-            self.letter = [i for i in ls]
-        elif isinstance(ls, list):
-            self.letter = ls
+        if characters_set is None:
+            characters_set = string.ascii_uppercase + string.digits
+        if isinstance(characters_set, str):
+            self.character = [i for i in characters_set]
+        elif isinstance(characters_set, list):
+            self.character = characters_set
 
-        self.lc = lc
+        self.num_of_characters = num_of_characters
         self.width, self.high = width, high
         self.debug = debug
         self.folder = folder
@@ -96,7 +97,7 @@ class Captcha:
         img[:, :, :] = tmp_img[:, :, :]
 
     def _draw_basic(self, img, text):
-        font_face = getattr(cv2, np.random.choice(self.fs))
+        font_face = getattr(cv2, np.random.choice(self.font_set))
         font_scale = 1
         font_thickness = 2
         max_width = max_high = 0
@@ -105,11 +106,11 @@ class Captcha:
                 i, font_face, font_scale, font_thickness)
             max_width, max_high = max(max_width, width), max(max_high, high)
 
-        total_width = max_width * self.lc
+        total_width = max_width * self.num_of_characters
         width_delta = np.random.randint(0, self.width - total_width)
         vertical_range = self.high - max_high
         images = list()
-        for index, letter in enumerate(text):
+        for index, character in enumerate(text):
             tmp_img = img.copy()
             delta_high = np.random.randint(
                 int(2*vertical_range/5), int(3*vertical_range/5)
@@ -120,7 +121,7 @@ class Captcha:
             )
             font_color = tuple(int(np.random.choice(range(0, 156)))
                                for _ in range(3))
-            cv2.putText(tmp_img, letter, bottom_left_coordinate, font_face,
+            cv2.putText(tmp_img, character, bottom_left_coordinate, font_face,
                         font_scale, font_color, font_thickness)
             self._tilt_img(tmp_img)
             images.append(tmp_img)
@@ -173,7 +174,8 @@ class Captcha:
     def batch_create_img(self, number=5):
         exits = set()
         while(len(exits)) < number:
-            word = ''.join(np.random.choice(self.letter, self.lc))
+            word = ''.join(
+                np.random.choice(self.character, self.num_of_characters))
             if word not in exits:
                 exits.add(word)
                 self.save_img(word)
@@ -188,5 +190,5 @@ if __name__ == '__main__':
     letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M',
                'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    c = Captcha(150, 40, lc=5, fs=['FONT_ITALIC'], debug=False)
+    c = Captcha(150, 40, num_of_characters=5, debug=True)
     c.batch_create_img(3)
