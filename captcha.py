@@ -4,13 +4,14 @@ import string
 import math
 import os
 import uuid
+import argparse
 
 wd, _ = os.path.split(os.path.abspath(__file__))
 
 
 class Captcha:
-    def __init__(self, width, high, characters_set=None, num_of_characters=4,
-                 font_set=None,
+    def __init__(self, width=120, height=36, characters_set=None,
+                 num_of_characters=4, font_set=None,
                  folder=os.path.join(wd, 'samples'), debug=False):
         """
         :param characters_set: character set, all
@@ -32,7 +33,7 @@ class Captcha:
             self.character = characters_set
 
         self.num_of_characters = num_of_characters
-        self.width, self.high = width, high
+        self.width, self.height = width, height
         self.debug = debug
         self.folder = folder
         if not self.debug and folder:
@@ -45,10 +46,10 @@ class Captcha:
         tile_angle = np.random.randint(
             int(100*-math.pi/6), int(100*math.pi/6)
         ) / 100
-        high, width, _ = img.shape
+        height, width, _ = img.shape
         for y in range(width):
-            for x in range(high):
-                new_y = int(y + (x-high/2)*math.tanh(tile_angle))
+            for x in range(height):
+                new_y = int(y + (x-height/2)*math.tanh(tile_angle))
                 try:
                     tmp_img[x, new_y, :] = img[x, y, :]
                 except IndexError:
@@ -75,7 +76,7 @@ class Captcha:
         area[:, :, :] = tmp_area[:, :, :]
 
     def _distort_img(self, img):
-        high, width, _ = img.shape
+        height, width, _ = img.shape
         tmp_img = img.copy()
         tmp_img.fill(255)
 
@@ -87,7 +88,7 @@ class Captcha:
             return int(x+coef_vertical*math.sin(coef_horizontal*y+scale_biase))
 
         for y in range(width):
-            for x in range(high):
+            for x in range(height):
                 new_x = new_coordinate(x, y)
                 try:
                     tmp_img[x, y, :] = img[new_x, y, :]
@@ -102,13 +103,13 @@ class Captcha:
         font_thickness = 2
         max_width = max_high = 0
         for i in text:
-            (width, high), _ = cv2.getTextSize(
+            (width, height), _ = cv2.getTextSize(
                 i, font_face, font_scale, font_thickness)
-            max_width, max_high = max(max_width, width), max(max_high, high)
+            max_width, max_high = max(max_width, width), max(max_high, height)
 
         total_width = max_width * self.num_of_characters
         width_delta = np.random.randint(0, self.width - total_width)
-        vertical_range = self.high - max_high
+        vertical_range = self.height - max_high
         images = list()
         for index, character in enumerate(text):
             tmp_img = img.copy()
@@ -117,7 +118,7 @@ class Captcha:
             )
             bottom_left_coordinate = (
                 index*max_width + width_delta,
-                self.high - delta_high
+                self.height - delta_high
             )
             font_color = tuple(int(np.random.choice(range(0, 156)))
                                for _ in range(3))
@@ -125,9 +126,9 @@ class Captcha:
                         font_scale, font_color, font_thickness)
             self._tilt_img(tmp_img)
             images.append(tmp_img)
-        high, width, _ = img.shape
+        height, width, _ = img.shape
         for y in range(width):
-            for x in range(high):
+            for x in range(height):
                 r, g, b = 0, 0, 0
                 for tmp_img in images:
                     r += tmp_img[x, y, 0]
@@ -138,9 +139,9 @@ class Captcha:
 
     def _draw_line(self, img):
         left_x = np.random.randint(0, self.width//4)
-        left_y = np.random.randint(self.high)
+        left_y = np.random.randint(self.height)
         right_x = np.random.randint(self.width*3//4, self.width)
-        right_y = np.random.randint(self.high)
+        right_y = np.random.randint(self.height)
         start, end = (left_x, left_y), (right_x, right_y)
         line_color = tuple(int(np.random.choice(range(0, 156)))
                            for _ in range(3))
@@ -150,13 +151,13 @@ class Captcha:
     def _put_noise(self, img):
         for i in range(600):
             x = np.random.randint(self.width)
-            y = np.random.randint(self.high)
+            y = np.random.randint(self.height)
             dot_color = tuple(int(np.random.choice(range(0, 156)))
                               for _ in range(3))
             img[y, x, :] = dot_color
 
     def save_img(self, text):
-        img = np.zeros((self.high, self.width, 3), np.uint8)
+        img = np.zeros((self.height, self.width, 3), np.uint8)
         img.fill(255)
         self._draw_basic(img, text)
         self._put_noise(img)
@@ -188,7 +189,24 @@ class Captcha:
 
 if __name__ == '__main__':
     letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M',
-               'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-               '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    c = Captcha(150, 40, num_of_characters=5, debug=True)
-    c.batch_create_img(3)
+               'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y']
+
+    parser = argparse.ArgumentParser(description='Generate captchas easily')
+    
+    parser.add_argument('--width', help='Width of the generated captcha image',
+                        type=int)
+    parser.add_argument('--height', help='Height of the generated captcha\
+                        image', type=int)
+    parser.add_argument('--num-characters', '-nc', help='Number of characters\
+                        per image', type=int)
+    parser.add_argument('--path', '-p', help='Path to save the generated\
+                        captcha images', type=str, default='data/')
+    parser.add_argument('--num-images', '-n', help='Number of captcha images\
+                        to be generated', type=int, default=50)
+    parser.add_argument('--debug', help='Run in debug mode',
+                        action='store_true')
+
+    args = parser.parse_args()
+    c = Captcha(width=args.width, height=args.height, folder=args.path,
+                num_of_characters=args.num_characters, debug=args.debug)
+    c.batch_create_img(args.num_images)
