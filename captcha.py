@@ -181,7 +181,7 @@ class Captcha:
                 exits.add(word)
                 self.save_img(word)
                 if not self.debug:
-                    if len(exits) % 10 == 0:
+                    if len(exits) % 100 == 0:
                         print('{} generated.'.format(len(exits)))
         if not self.debug:
             print('{} captchas saved into {}.'.format(len(exits), self.folder))
@@ -192,7 +192,7 @@ if __name__ == '__main__':
                'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y']
 
     parser = argparse.ArgumentParser(description='Generate captchas easily')
-    
+
     parser.add_argument('--width', help='Width of the generated captcha image',
                         type=int)
     parser.add_argument('--height', help='Height of the generated captcha\
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', '-p', help='Path to save the generated\
                         captcha images', type=str, default='data/')
     parser.add_argument('--num-images', '-n', help='Number of captcha images\
-                        to be generated', type=int, default=50)
+                        to be generated', type=int, default=5)
     parser.add_argument('--debug', help='Run in debug mode',
                         action='store_true')
 
