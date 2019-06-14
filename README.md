@@ -8,7 +8,30 @@ The CAPTCHA generated is like this:
 
 ### How to use
 Change the batch_create_img function parameter on the main section of the code to choose how many captcha images you want to generate. You can run
-```python captcha.py```   to generate the captchas.
+```python captcha.py```   to generate the captchas with default settings.
+
+
+for getting the arguments to execute: ```python captcha.py -h```
+
+```
+usage: captcha.py [-h] [--width WIDTH] [--height HEIGHT]
+                  [--num-characters NUM_CHARACTERS] [--path PATH]
+                  [--num-images NUM_IMAGES] [--debug]
+
+Generate captchas easily
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --width WIDTH         Width of the generated captcha image
+  --height HEIGHT       Height of the generated captcha image
+  --num-characters NUM_CHARACTERS, -nc NUM_CHARACTERS
+                        Number of characters per image
+  --path PATH, -p PATH  Path to save the generated captcha images
+  --num-images NUM_IMAGES, -n NUM_IMAGES
+                        Number of captcha images to be generated
+  --debug               Run in debug mode
+
+```
 
 ### example:
 ```python
