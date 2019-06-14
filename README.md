@@ -15,12 +15,12 @@ Change the batch_create_img function parameter on the main section of the code t
 from captcha import Captcha
 
 
-letter_set = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M',
-            'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-letters_per_img = 5
+characters_set = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M',
+                  'N', 'P', 'R', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+characters_per_img = 5
 min_width, min_height = 150, 40
-c = Captcha(min_width, min_height, letter_set, letters_per_img, debug=True)
+c = Captcha(min_width, min_height, characters_set, characters_per_img, debug=True)
 c.batch_create_img(5)
 ```
 ---
