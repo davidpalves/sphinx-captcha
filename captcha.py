@@ -207,6 +207,7 @@ if __name__ == '__main__':
                         action='store_true')
 
     args = parser.parse_args()
-    c = Captcha(width=args.width, height=args.height, folder=args.path,
-                num_of_characters=args.num_characters, debug=args.debug)
+    c = Captcha(width=args.width, characters_set=letters, height=args.height,
+                folder=args.path, num_of_characters=args.num_characters,
+                debug=args.debug)
     c.batch_create_img(args.num_images)
