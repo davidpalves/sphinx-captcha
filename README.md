@@ -1,5 +1,8 @@
 # Sphinx Captcha Generator
 
+This is a fork from [Skyduy](https://github.com/skyduy/CAPTCHA_generator)'s captcha generator.
+
+
 The CAPTCHA generated is like this:
 
 ![1](https://github.com/davidpierre21/sphinx-captcha/raw/master/samples/0CVSX_a405.jpg)
@@ -33,8 +36,6 @@ optional arguments:
 
 ```
 ---
-
-Based on [Skyduy](https://github.com/skyduy/CAPTCHA_generator)'s captcha generator.
 
 ### Warning
 You may encounter some issues while trying to generate with a different number of letters,
